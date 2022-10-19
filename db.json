@@ -1,8 +1,20 @@
 {
-  "id": "1",
-  "name":"Mia",
-  "breed":"Border Collie",
-  "weight":"49",
-  "shelter": "MaxFund",
-  "adoptable":"true"
+  "dogs": [
+    {
+      "id": 1,
+      "name":"Mia",
+      "breed":"Border Collie",
+      "weight":49,
+      "shelter": "MaxFund",
+      "adoptable":true
+    },
+    {
+      "id": 2,
+      "name": "Moe",
+      "breed": "Pug",
+      "weight": "19",
+      "shelter": "MaxFund",
+      "adoptable": "true"
+    }
+  ]
 }
