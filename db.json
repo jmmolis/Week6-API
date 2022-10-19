@@ -1,7 +1,8 @@
 {
+  "id": "1",
   "name":"Mia",
   "breed":"Border Collie",
-  "weight":49,
+  "weight":"49",
   "shelter": "MaxFund",
-  "adoptable":true
+  "adoptable":"true"
 }
