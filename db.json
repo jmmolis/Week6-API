@@ -12,9 +12,9 @@
       "id": 2,
       "name": "Moe",
       "breed": "Pug",
-      "weight": "19",
+      "weight": 19,
       "shelter": "MaxFund",
-      "adoptable": "true"
+      "adoptable": true
     }
   ]
 }
