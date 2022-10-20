@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         requestText = findViewById(R.id.request_text)
         responseText = findViewById(R.id.response_text)
 
+        // GET
         findViewById<Button>(R.id.get_button).setOnClickListener {
             makeCall {
                 if (TextUtils.isEmpty(requestText.text)) {
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // POST
         findViewById<Button>(R.id.post_button).setOnClickListener {
             val jsonObject = JSONObject()
             jsonObject.put("id", "1")
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Update
         findViewById<Button>(R.id.put_button).setOnClickListener {
             val jsonObject = JSONObject()
             jsonObject.put("id", "2")
@@ -77,12 +80,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Delete
         findViewById<Button>(R.id.delete_button).setOnClickListener {
             makeCall {
                 service.deleteDog(requestText.text.toString())
             }
         }
     }
+
 
         fun makeCall(action: suspend () -> Response<ResponseBody>) {
             CoroutineScope(Dispatchers.IO).launch {
