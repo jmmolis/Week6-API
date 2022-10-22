@@ -7,17 +7,17 @@ import android.widget.Button
 import android.widget.TextView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
+import edu.du.week6apis.model.DogModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Response;
 
 class MainActivity : AppCompatActivity() {
     lateinit var service: DogService
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://my-json-server.typicode.com/jmmolis/Week6-API/")
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         service = retrofit.create(DogService::class.java)
@@ -41,14 +42,16 @@ class MainActivity : AppCompatActivity() {
 
         // GET
         findViewById<Button>(R.id.get_button).setOnClickListener {
-            makeCall {
                 if (TextUtils.isEmpty(requestText.text)) {
-                    service.getDogs()
+                    makeListCall {
+                        service.getDogs()
+                    }
                 } else {
-                    service.getDog(requestText.text.toString())
+                    makeCall {
+                        service.getDog(requestText.text.toString())
+                    }
                 }
             }
-        }
 
         // POST
         findViewById<Button>(R.id.post_button).setOnClickListener {
@@ -89,12 +92,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-        fun makeCall(action: suspend () -> Response<ResponseBody>) {
+        fun makeCall(action: suspend () -> Response<DogModel>) {
             CoroutineScope(Dispatchers.IO).launch {
-                var response: Response<ResponseBody> = action()
+                var response: Response<DogModel> = action()
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        responseText.text = formatJson(response.body()?.string())
+                        responseText.text = gson.toJson(response.body())
                     } else {
                         responseText.text = response.code().toString()
                     }
@@ -102,8 +105,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fun formatJson(text:String?): String {
-            return gson.toJson(JsonParser.parseString(text))
+    fun makeListCall(action: suspend () -> Response<List<DogModel>>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            var response: Response<List<DogModel>> = action()
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    responseText.text = gson.toJson(response.body())
+                } else {
+                    responseText.text = response.code().toString()
+                }
+            }
         }
+    }
 }
 
