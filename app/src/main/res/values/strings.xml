@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Week6APIs</string>
+    <string name="get_button">GET</string>
+    <string name="post_button">POST</string>
+    <string name="put_button">PUT</string>
+    <string name="delete_button">DELETE</string>
 </resources>
