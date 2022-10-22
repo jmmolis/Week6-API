@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             val jsonObject = JSONObject()
             jsonObject.put("id", "4")
             jsonObject.put("title", "The Avengers")
-            jsonObject.put("director", "Kevin Fiege")
+            jsonObject.put("director", "Joss Whedon")
             jsonObject.put("year", "2012")
             makeCall {
                 service.createMovie(
