@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import edu.du.week6apis.model.DogModel
+import edu.du.week6apis.model.MovieModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Response;
 
 class MainActivity : AppCompatActivity() {
-    lateinit var service: DogService
+    lateinit var service: MovieService
     lateinit var gson: Gson
     lateinit var requestText: TextView
     lateinit var responseText: TextView
@@ -30,11 +30,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://my-json-server.typicode.com/jmmolis/Week6-API/")
+            .baseUrl("https://my-json-server.typicode.com/ottomathuss/Week6RestAPIs/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        service = retrofit.create(DogService::class.java)
+        service = retrofit.create(MovieService::class.java)
         gson = GsonBuilder().setPrettyPrinting().create()
 
         requestText = findViewById(R.id.request_text)
@@ -44,11 +44,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.get_button).setOnClickListener {
                 if (TextUtils.isEmpty(requestText.text)) {
                     makeListCall {
-                        service.getDogs()
+                        service.getMovies()
                     }
                 } else {
                     makeCall {
-                        service.getDog(requestText.text.toString())
+                        service.getMovie(requestText.text.toString())
                     }
                 }
             }
@@ -56,14 +56,12 @@ class MainActivity : AppCompatActivity() {
         // POST
         findViewById<Button>(R.id.post_button).setOnClickListener {
             val jsonObject = JSONObject()
-            jsonObject.put("id", "1")
-            jsonObject.put("name", "Mia")
-            jsonObject.put("breed", "Border Collie")
-            jsonObject.put("weight", "49")
-            jsonObject.put("shelter", "MaxFund")
-            jsonObject.put("adoptable", "true")
+            jsonObject.put("id", "4")
+            jsonObject.put("title", "The Avengers")
+            jsonObject.put("director", "Kevin Fiege")
+            jsonObject.put("year", "2012")
             makeCall {
-                service.createDog(
+                service.createMovie(
                     jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
                 )
             }
@@ -73,28 +71,26 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.put_button).setOnClickListener {
             val jsonObject = JSONObject()
             jsonObject.put("id", "2")
-            jsonObject.put("name", "Moe")
-            jsonObject.put("breed", "Pug")
-            jsonObject.put("weight", "19")
-            jsonObject.put("shelter", "MaxFund")
-            jsonObject.put("adoptable", "true")
+            jsonObject.put("title", "Some Like it Hot")
+            jsonObject.put("director", "Billy Wilder")
+            jsonObject.put("year", "1959")
             makeCall {
-                service.updateDog(jsonObject.getString("id"), jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull()))
+                service.updateMovie(jsonObject.getString("id"), jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull()))
             }
         }
 
         // Delete
         findViewById<Button>(R.id.delete_button).setOnClickListener {
             makeCall {
-                service.deleteDog(requestText.text.toString())
+                service.deleteMovie(requestText.text.toString())
             }
         }
     }
 
 
-        fun makeCall(action: suspend () -> Response<DogModel>) {
+        fun makeCall(action: suspend () -> Response<MovieModel>) {
             CoroutineScope(Dispatchers.IO).launch {
-                var response: Response<DogModel> = action()
+                var response: Response<MovieModel> = action()
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         responseText.text = gson.toJson(response.body())
@@ -105,9 +101,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    fun makeListCall(action: suspend () -> Response<List<DogModel>>) {
+    fun makeListCall(action: suspend () -> Response<List<MovieModel>>) {
         CoroutineScope(Dispatchers.IO).launch {
-            var response: Response<List<DogModel>> = action()
+            var response: Response<List<MovieModel>> = action()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     responseText.text = gson.toJson(response.body())
